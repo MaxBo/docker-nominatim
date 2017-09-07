@@ -1,36 +1,38 @@
-FROM debian:jessie
-MAINTAINER Fabian Köster <mail@fabian-koester.com>
+FROM ubuntu:xenial
+MAINTAINER Nicolas Ternisien <nicolas.ternisien@gmail.com>
 
 EXPOSE 80
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    apache2 \
     build-essential \
+    cmake \
+    g++ \
+    libboost-dev  \
+    libboost-system-dev \
+    libboost-filesystem-dev  \
+    libexpat1-dev  \
+    zlib1g-dev  \
+    libxml2-dev \
+    libbz2-dev  \
+    libpq-dev  \
+    libgeos-dev  \
+    libgeos++-dev  \
+    libproj-dev \
+    apache2  \
+    php  \
+    php-pgsql  \
+    libapache2-mod-php  \
+    php-pear  \
+    php-db \
+    php-intl  \
+    git \
     ca-certificates \
     curl \
-    libapache2-mod-php5 \
-    libboost-dev \
-    libboost-filesystem-dev \
-    libboost-system-dev \
-    libboost-thread-dev \
-    libbz2-dev \
-    libexpat-dev \
-    libgeos-c1 \
-    libgeos++-dev \
-    libpq-dev \
-    libproj-dev \
-    libtool \
-    libxml2-dev \
-    php-db \
-    php5 \
-    php5-json \
-    php5-pgsql \
-    php-pear \
     postgresql-client \
-    postgresql-server-dev-9.4 \
+    postgresql-server-dev-9.5 \
     proj-bin \
- && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 # Install gosu
 ENV GOSU_VERSION 1.9
@@ -46,17 +48,19 @@ RUN set -x \
     && gosu nobody true
 
 ARG WEBROOT=/var/www/html/nominatim
-RUN groupadd -r nominatim && useradd -r -g nominatim nominatim
-RUN mkdir -p ${WEBROOT} /app && chmod -R 755 ${WEBROOT} /app && chown -R nominatim:nominatim ${WEBROOT} /app
+ARG NOMINATIM_HOME=/app
+RUN groupadd -r nominatim && useradd -d ${NOMINATIM_HOME}  -s /bin/bash -r -g nominatim nominatim
+RUN mkdir -p ${WEBROOT} ${NOMINATIM_HOME} && chmod -R 755 ${WEBROOT} ${NOMINATIM_HOME} && chown -R nominatim:nominatim ${WEBROOT} ${NOMINATIM_HOME}
 
-WORKDIR /app
+WORKDIR ${NOMINATIM_HOME}
 ARG NOMINATIM_VERSION=3.0.1
-ARG NOMINATIM_SHA256=0c2d7fcafc3caa42b3f5f2041ecf33bb22377ffe861a0b97a5aa27b6552d597b
+ARG NOMINATIM_SHA256=30c19ba03bae0b23bd789758e41849da65b5a2104e69f072d4c754cb9b509c57
 RUN gosu nominatim curl -o nominatim.tar.bz2 http://www.nominatim.org/release/Nominatim-${NOMINATIM_VERSION}.tar.bz2 \
   && echo "${NOMINATIM_SHA256} nominatim.tar.bz2" | sha256sum -c \
   && gosu nominatim tar -xf nominatim.tar.bz2 --strip-components=1 \
-  && rm *.tar.bz2 \
-  && gosu nominatim ./configure \
+  && rm *.tar.bz2
+
+RUN gosu nominatim ./configure \
   && gosu nominatim make
 
 COPY entrypoint.sh wait-for-it.sh ./
