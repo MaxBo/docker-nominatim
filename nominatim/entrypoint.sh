@@ -35,19 +35,17 @@ function initialization {
     END_DOWNLOAD=$(date +%s)
   fi
 
+  
   log_info "==> Adding user www-data to database"
+  # gosu postgres dropuser www-data
   gosu postgres createuser -SDR www-data
 
   log_info "==> Starting Import..."
   START_IMPORT=$(date +%s)
-  gosu nominatim /app/utils/setup.php --osm-file /importdata/data.osm.pbf --all --osm2pgsql-cache ${OSM2PGSQL_CACHE} 2>&1 || die "Import failed"
-
-  log_info "...importing country codes and names..."
-  gosu nominatim /app/utils/specialphrases.php --countries > /tmp/specialphrases_countries.sql
-  gosu nominatim psql -d nominatim -f /tmp/specialphrases_countries.sql
+  gosu nominatim /app/build/utils/setup.php --osm-file /importdata/data.osm.pbf --all --osm2pgsql-cache ${OSM2PGSQL_CACHE} 2>&1 || die "Import failed"
 
   log_info "...importing special phrases..."
-  gosu nominatim /app/utils/specialphrases.php --wiki-import > /tmp/specialphrases.sql
+  gosu nominatim /app/build/utils/specialphrases.php --wiki-import > /tmp/specialphrases.sql
   gosu nominatim psql -d nominatim -f /tmp/specialphrases.sql
   END_IMPORT=$(date +%s)
 

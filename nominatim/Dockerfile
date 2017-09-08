@@ -60,16 +60,16 @@ RUN gosu nominatim curl -o nominatim.tar.bz2 http://www.nominatim.org/release/No
   && gosu nominatim tar -xf nominatim.tar.bz2 --strip-components=1 \
   && rm *.tar.bz2
 
-RUN gosu nominatim ./configure \
-  && gosu nominatim make
+RUN gosu nominatim mkdir build \
+    && cd build \
+    && cmake .. \
+    && make
 
 COPY entrypoint.sh wait-for-it.sh ./
-COPY local.php ./settings/local.php
+COPY local.php ${NOMINATIM_HOME}/build/settings/local.php
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 COPY apache2-foreground /usr/local/bin
 
-RUN gosu nominatim /app/utils/setup.php --create-website /var/www/html/nominatim
-
 VOLUME /importdata
-VOLUME /app/module
+
 CMD /app/entrypoint.sh
