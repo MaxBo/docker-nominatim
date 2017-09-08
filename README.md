@@ -19,11 +19,11 @@ This design of course means you cannot just prebuilt the ready-to-use Nominatim 
 
 ## Supported tags and respective Dockerfile links
 
-* `2.5.1`, `2.5`, `latest` [(Dockerfile)](https://github.com/bringnow/docker-nominatim/blob/master/nominatim/Dockerfile)
+* `3.0.1` [(Dockerfile)](https://github.com/lastnico/docker-nominatim/blob/master/nominatim/Dockerfile)
 
 ## Getting started
 
-1. Make sure you have current versions of Docker (>= 1.12) and docker-compose (>= 1.9).
+1. Make sure you have current versions of Docker (>= 1.17) and docker-compose (>= 1.15).
 2. Clone this repository
 3. Create a docker volume named `nominatim-database`:
 
@@ -63,7 +63,7 @@ Transferring the prebuilt instance basically means copying the contents of the P
 
 On the machine with the prebuilt nominatim instance, run the following steps:
 
-1. Get the [ssh-copy-docker-volume.sh](https://github.com/bringnow/ssh-copy-docker-volume) script.
+1. Get the [ssh-copy-docker-volume.sh](https://github.com/lastnico/ssh-copy-docker-volume) script.
 2. Make sure the Docker containers are stopped:
 
   ```bash
@@ -77,7 +77,13 @@ On the machine with the prebuilt nominatim instance, run the following steps:
 
 Then on the target machine, follow the steps from the [Getting Started](#getting-started) section but skip step 3, the creation of the volume.
 
+## Credits
+
+This project was cloned from [bringnow/docker-nominatim](https://github.com/bringnow/docker-nominatim), initially in order to support Nominatim 3.0.1.
+
 ## Alternatives
 
+
+* [bringnow/docker-nominatim](https://github.com/bringnow/docker-nominatim) For older version 2.5.1
 * [helvalius/nominatim-docker](https://github.com/helvalius/nominatim-docker)
 * [mediagis/nominatim-docker](https://github.com/mediagis/nominatim-docker)
