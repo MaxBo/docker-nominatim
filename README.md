@@ -84,6 +84,6 @@ This project was cloned from [bringnow/docker-nominatim](https://github.com/brin
 ## Alternatives
 
 
-* [bringnow/docker-nominatim](https://github.com/bringnow/docker-nominatim) For older version 2.5.1
+* [bringnow/docker-nominatim](https://github.com/bringnow/docker-nominatim) for older version 2.5.1.
 * [helvalius/nominatim-docker](https://github.com/helvalius/nominatim-docker)
 * [mediagis/nominatim-docker](https://github.com/mediagis/nominatim-docker)
