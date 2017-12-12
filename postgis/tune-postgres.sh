@@ -13,4 +13,6 @@ checkpoint_timeout = 10min
 checkpoint_completion_target = 0.9
 fsync = off # For initial import
 full_page_writes = off # For initial import
+max_wal_size = 4GB
+min_wal_size = 256MB
 EOF
