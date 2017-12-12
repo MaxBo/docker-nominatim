@@ -1,13 +1,17 @@
 # docker-nominatim
 
-A docker setup for running a custom instance of the [Nominatim geocoding service](http://wiki.openstreetmap.org/wiki/Nominatim) providing a nominatim-only image for use together with the plain [mdillon/postgis](https://hub.docker.com/r/mdillon/postgis/) image.
+A docker setup for running a custom instance of the [Nominatim geocoding service](http://wiki.openstreetmap.org/wiki/Nominatim) providing a nominatim-only image for use together with the plain [mdillon/postgis:9.5](https://hub.docker.com/r/mdillon/postgis/) image for postgis 9.5.
+
+The nominatim-server uses the Tile-Server from [Wikimedia](https://maps.wikimedia.org/osm-intl) as a background-map which is https-encrypted. This allows to run the nominatim-server also as a https-page without "mixed-content" of http and https. This is configured in the local.php file in the same folder as the Dockerfile in the nominatim_https-folder. 
+
+The tune-postgres.sh -file in the postgis-folder defines some configuration for the postgres-server setting max_wal_size = 4GB and min_wal_size = 256MB for imports of huge datasets.
 
 In contrast to other nominatim docker setups I have seen so far (see [Alternatives](#alternatives)) this setup has two main advantages:
 
 1. Two separate containers instead of one for all services:
 
   * Apache containing the Nominatim instance
-  * PostgreSQL + PostGIS (using plain [mdillon/postgis](https://hub.docker.com/r/mdillon/postgis/) image)
+  * PostgreSQL 9.5 + PostGIS (using plain [mdillon/postgis:9.5](https://hub.docker.com/r/mdillon/postgis/) image)
 
   This better complies with Docker's key principal: one container per service. The two docker containers are orchestrated using `docker-compose`.
   
@@ -79,7 +83,7 @@ Then on the target machine, follow the steps from the [Getting Started](#getting
 
 ## Credits
 
-This project was cloned from [bringnow/docker-nominatim](https://github.com/bringnow/docker-nominatim), initially in order to support Nominatim 3.0.1.
+This project was cloned from [lastnico/docker-nominatim](https://github.com/lastnico/docker-nominatim) to add the https-background-map and tune the postgres-server. 
 
 ## Alternatives
 
